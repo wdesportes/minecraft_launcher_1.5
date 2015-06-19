@@ -24,7 +24,7 @@ public class LauncherFrame extends Frame
 
   public LauncherFrame()
   {
-    super("*nds* Launcher");
+    super(LauncherConstants.SERVER_NAME+" Launcher");
 
     setBackground(Color.BLACK);
     this.loginForm = new LoginForm(this);
@@ -82,7 +82,7 @@ public class LauncherFrame extends Frame
       validate();
       this.launcher.start();
       this.loginForm = null;
-      setTitle("*nds*");
+      setTitle(LauncherConstants.SERVER_NAME);
     } catch (Exception e) {
       e.printStackTrace();
       showError(e.toString());
@@ -92,9 +92,9 @@ public class LauncherFrame extends Frame
   public void login(String userName, String password) {
     try {
       String parameters = "user=" + URLEncoder.encode(userName, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8") + "&version=" + 13;
-      String result = Util.excutePost("https://login.minecraft.net/", parameters);
+      String result = Util.excutePost(LauncherConstants.URL_LOGIN, parameters);
       if (result == null) {
-        showError("Can't connect to minecraft.net");
+        showError("Echec de la connexion a : "+LauncherConstants.SERVER_NAME);
         this.loginForm.setNoNetwork();
         return;
       }
@@ -126,7 +126,7 @@ public class LauncherFrame extends Frame
       this.launcher.start();
       this.loginForm.loginOk();
       this.loginForm = null;
-      setTitle("*nds*");
+      setTitle(LauncherConstants.SERVER_NAME);
     } catch (Exception e) {
       e.printStackTrace();
       showError(e.toString());

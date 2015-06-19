@@ -112,7 +112,7 @@ public class LoginForm extends TransparentPanel
 
   private void readUsername() {
     try {
-      File lastLogin = new File(Util.getWorkingDirectory("minecraft"), "lastlogin");
+      File lastLogin = new File(Util.getWorkingDirectory(LauncherConstants.APPDATA), "lastlogin");
 
       Cipher cipher = getCipher(2, "passwordfile");
       DataInputStream dis;
@@ -132,7 +132,7 @@ public class LoginForm extends TransparentPanel
 
   private void writeUsername() {
     try {
-      File lastLogin = new File(Util.getWorkingDirectory("minecraft"), "lastlogin");
+      File lastLogin = new File(Util.getWorkingDirectory(LauncherConstants.APPDATA), "lastlogin");
 
       Cipher cipher = getCipher(1, "passwordfile");
       DataOutputStream dos;
@@ -184,7 +184,7 @@ public class LoginForm extends TransparentPanel
       new Thread() {
         public void run() {
           try {
-            editorPane.setPage(new URL(GameUpdater.urlBlog));
+            editorPane.setPage(new URL(LauncherConstants.URL_BLOG));
           } catch (Exception e) {
             e.printStackTrace();
             editorPane.setText("<html><body><font color=\"#808080\"><br><br><br><br><br><br><br><center>Failed to update news<br>" + e.toString() + "</center></font></body></html>");
@@ -295,7 +295,7 @@ public class LoginForm extends TransparentPanel
         accountLink.addMouseListener(new MouseAdapter() {
           public void mousePressed(MouseEvent arg0) {
             try {
-              Util.openLink(new URL("http://www.minecraft.net/register.jsp").toURI());
+              Util.openLink(new URL(LauncherConstants.URL_REGISTER).toURI());
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -350,7 +350,7 @@ public class LoginForm extends TransparentPanel
     accountLink.addMouseListener(new MouseAdapter() {
       public void mousePressed(MouseEvent arg0) {
         try {
-          Util.openLink(new URL("http://www.minecraft.net/download.jsp").toURI());
+          Util.openLink(new URL(LauncherConstants.URL_DOWNLOAD).toURI());
         } catch (Exception e) {
           e.printStackTrace();
         }

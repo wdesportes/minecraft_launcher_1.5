@@ -17,7 +17,7 @@ public class Util
   private static File workDir = null;
 
   public static File getWorkingDirectory() {
-    if (workDir == null) workDir = getWorkingDirectory("minecraft");
+    if (workDir == null) workDir = getWorkingDirectory(LauncherConstants.APPDATA);
     return workDir;
   }
 

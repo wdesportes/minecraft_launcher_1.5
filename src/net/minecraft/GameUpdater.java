@@ -45,8 +45,7 @@ import java.util.jar.Pack200;
 public class GameUpdater
   implements Runnable
 {
-  public String urlFolder = "dossierDuJar", versionFileTxt = "versionTxt", zipFile = "modEtToutEnZip";
-  public static String urlBlog = "http://tweet-mod.com/tweetmod/download/launcher/easylauncher.htm";//Url de la page d'accueil du launcher, par défaut un tuto :)
+  LauncherConstants parametres;
   public File zip, folder;
   public static final int STATE_INIT = 1;
   public static final int STATE_DETERMINING_PACKAGES = 2;
@@ -123,21 +122,21 @@ public class GameUpdater
     case 1:
       return "Initialisation du chargement.";
     case 2:
-      return "Determination des packages à télécharger.";
+      return "Determination des packages Ã  tÃ©lÃ©charger.";
     case 3:
-      return "Vérification du cache pour les fichiers existants.";
+      return "VÃ©rification du cache pour les fichiers existants.";
     case 4:
-      return "Téléchargement des packages.";
+      return "TÃ©lÃ©chargement des packages.";
     case 5:
-      return "Extraction des packages téléchargés.";
+      return "Extraction des packages tÃ©lÃ©chargÃ©s.";
     case 6:
-      return "Mise à jour du classpath.";
+      return "Mise Ã  jour du classpath.";
     case 7:
       return "Changement de l'applet.";
     case 8:
-      return "Initialisation de l'applet réelle.";
+      return "Initialisation de l'applet rÃ©elle.";
     case 9:
-      return "Ouverture de l'applet réelle.";
+      return "Ouverture de l'applet rÃ©elle.";
     case 10:
       return "Fin du chargement.";
     }
@@ -164,16 +163,16 @@ public class GameUpdater
      StringTokenizer jar = new StringTokenizer(jarList, ", ");
      int jarCount = jar.countTokens() + 1;
      this.urlList = new URL[jarCount];
-     URL path = new URL("http://s3.amazonaws.com/MinecraftDownload/");
+     URL path = new URL(LauncherConstants.URL_RESSOURCES);
      for (int i = 0; i < jarCount - 1; i++) {
      String nextToken = jar.nextToken();
      URL oldPath = path;
      if (nextToken.indexOf("minecraft.jar") >= 0) 
      {
-        path = new URL(urlFolder);
+        path = new URL(LauncherConstants.URL_FOLDER);
   	 }
      if (nextToken.indexOf("minecraft.jar") >= 0) {
-       this.urlList[i] = new URL(path, nextToken.replaceAll("minecraft.jar", "*nds*.jar"));
+       this.urlList[i] = new URL(path, nextToken.replaceAll("minecraft.jar", LauncherConstants.APPDATA+".jar"));
   	   }
   	   else 
   	   {
@@ -218,8 +217,8 @@ public class GameUpdater
 		folder = new File(pathFolder);
 		
 		try {
-			System.out.println(zipFile);
-			URL url = new URL(zipFile);
+			System.out.println(LauncherConstants.URL_ZIP);
+			URL url = new URL(LauncherConstants.URL_ZIP);
 			URLConnection conn = url.openConnection();			
 			int FileLenght = conn.getContentLength();
 			if (FileLenght == -1) {
@@ -272,7 +271,7 @@ public void run()
    	try
    	{
    		 loadJarURLs();
-   	     String path = (String)AccessController.doPrivileged(new PrivilegedExceptionAction() 
+   	     String path = (String)AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() 
    	     {
    	    	 public Object run() throws Exception 
    	    	 {
@@ -294,13 +293,13 @@ public void run()
              this.percentage = 90;
    	     }
          boolean updateLauncher = false;
-         if(this.forceUpdate == 1) {
+         if(forceUpdate == 1) {
         	 updateLauncher = true;
          }
    	     try 
    	     {
               String versionLauncher = "";
-              URL url_version = new URL(versionFileTxt);
+              URL url_version = new URL(LauncherConstants.URL_VERSION);
           try 
           {
               BufferedReader in = new BufferedReader(new InputStreamReader(url_version.openStream()));
@@ -310,7 +309,7 @@ public void run()
    	     {
               System.err.println(e);
    	     }
-          File current_versionLauncher = new File(dir, "*nds*.txt");
+          File current_versionLauncher = new File(dir, LauncherConstants.APPDATA+".txt");
           if (!current_versionLauncher.exists()) 
           {
               updateLauncher = true;
@@ -464,7 +463,7 @@ public void run()
     {
       Field field = ClassLoader.class.getDeclaredField("loadedLibraryNames");
       field.setAccessible(true);
-      Vector libs = (Vector)field.get(getClass().getClassLoader());
+      Vector<?> libs = (Vector<?>)field.get(getClass().getClassLoader());
 
       String path = new File(nativePath).getCanonicalPath();
 
@@ -483,7 +482,7 @@ public void run()
 
   public Applet createApplet() throws ClassNotFoundException, InstantiationException, IllegalAccessException
   {
-    Class appletClass = classLoader.loadClass("net.minecraft.client.MinecraftApplet");
+    Class<?> appletClass = classLoader.loadClass("net.minecraft.client.MinecraftApplet");
     return (Applet)appletClass.newInstance();
   }
 
@@ -532,7 +531,7 @@ public void run()
 	            this.currentSizeDownload += bufferSize;
 	            fileSize += bufferSize;
 	            this.percentage = (initialPercentage + this.currentSizeDownload * 45 / this.totalSizeDownload);
-	            this.subtaskMessage = ("Réception en cours de: " + currentFile + " " + this.currentSizeDownload * 100 / this.totalSizeDownload + "%");
+	            this.subtaskMessage = ("Rï¿½ception en cours de: " + currentFile + " " + this.currentSizeDownload * 100 / this.totalSizeDownload + "%");
 	            downloadedAmount += bufferSize;
 	            long timeLapse = System.currentTimeMillis() - downloadStartTime;  
 	            if (timeLapse >= 1000L)
@@ -560,7 +559,7 @@ public void run()
 	            this.currentSizeDownload -= fileSize;
 	          }
 	          else {
-	            throw new Exception("Echec du téléchargement " + currentFile);
+	            throw new Exception("Echec du tï¿½lï¿½chargement " + currentFile);
 	          }
 	        }
 	  
@@ -609,9 +608,9 @@ public void run()
 	  
 	  	if (is[0] == null) {
 		if (currentFile.equals("minecraft.jar")) {
-		throw new Exception("Impossible de télécharger " + currentFile);
+		throw new Exception("Impossible de tï¿½lï¿½charger " + currentFile);
 	  	}
-		throw new Exception("Impossible de télécharger " + currentFile);
+		throw new Exception("Impossible de tï¿½lï¿½charger " + currentFile);
 	    } 
 	  	return is[0];
 	  }
@@ -623,8 +622,8 @@ public void run()
     if (!f.exists()) return;
     FileInputStream fileInputHandle = new FileInputStream(f);
 
-    Class clazz = Class.forName("LZMA.LzmaInputStream");
-    Constructor constructor = clazz.getDeclaredConstructor(new Class[] { 
+    Class<?> clazz = Class.forName("LZMA.LzmaInputStream");
+    Constructor<?> constructor = clazz.getDeclaredConstructor(new Class[] { 
       InputStream.class });
 
     InputStream inputHandle = (InputStream)constructor.newInstance(new Object[] { 
@@ -722,7 +721,7 @@ public void run()
     File file = new File(path + nativeJar);
     if (!file.exists()) return;
     JarFile jarFile = new JarFile(file, true);
-    Enumeration entities = jarFile.entries();
+    Enumeration<?> entities = jarFile.entries();
 
     this.totalSizeExtract = 0;
 
@@ -832,7 +831,7 @@ public void run()
   {
     try
     {
-      String path = (String)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+      String path = (String)AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
         public Object run() throws Exception {
           return Util.getWorkingDirectory() + File.separator + "bin" + File.separator;
         }

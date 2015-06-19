@@ -12,8 +12,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.VolatileImage;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -183,7 +181,7 @@ public class Launcher extends Applet
       g.fill3DRect(w / 2 - 56 - 8, h / 2, 56, 20, true);
       g.fill3DRect(w / 2 + 8, h / 2, 56, 20, true);
 
-      msg = "Would you like to update?";
+      msg = "Voulez vous mettre a jour ?";
       g.drawString(msg, w / 2 - fm.stringWidth(msg) / 2, h / 2 - 8);
 
       g.setColor(Color.BLACK);
@@ -196,7 +194,7 @@ public class Launcher extends Applet
     {
       g.setColor(Color.LIGHT_GRAY);
 
-      String msg = "Mise à jour de - *nds*";
+      String msg = "Mise Ã  jour de - "+LauncherConstants.SERVER_NAME;
       if (this.gameUpdater.fatalError) {
         msg = "Failed to launch";
       }
@@ -248,14 +246,7 @@ public class Launcher extends Applet
   {
   }
 
-  public URL getDocumentBase() {
-    try {
-      return new URL("http://www.minecraft.net/game/");
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
+
 
   public void mouseClicked(MouseEvent arg0) {
   }
